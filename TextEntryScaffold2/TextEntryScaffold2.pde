@@ -19,6 +19,11 @@ final float sizeOfInputArea = DPIofYourDeviceScreen*1; //aka, 1.0 inches square!
 //Variables for my silly implementation. You can delete this:
 char currentLetter = 'a';
 
+//Group 16 variables
+String[] alphabet = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "H", 
+                    "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
+                    "U", "V", "W", "X", "Y", "Z"};
+
 //You can modify anything in here. This is just a basic implementation.
 void setup()
 {
@@ -28,7 +33,7 @@ void setup()
   orientation(PORTRAIT); //can also be LANDSCAPE -- sets orientation on android device
   size(1000, 1000); //Sets the size of the app. You may want to modify this to your device. Many phones today are 1080 wide by 1920 tall.
   textFont(createFont("Arial", 24)); //set the font to arial 24
-  noStroke(); //my code doesn't use any strokes.
+  //noStroke(); //my code doesn't use any strokes.
 }
 
 //You can modify anything in here. This is just a basic implementation.
@@ -76,12 +81,13 @@ void draw()
 
 
     //my draw code
-    textAlign(CENTER);
-    text("" + currentLetter, 200+sizeOfInputArea/2, 200+sizeOfInputArea/3); //draw current letter
-    fill(255, 0, 0);
-    rect(200, 200+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2); //draw left red button
-    fill(0, 255, 0);
-    rect(200+sizeOfInputArea/2, 200+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2); //draw right green button
+    //textAlign(CENTER);
+    //text("" + currentLetter, 200+sizeOfInputArea/2, 200+sizeOfInputArea/3); //draw current letter
+    //fill(255, 0, 0);
+    //rect(200, 200+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2); //draw left red button
+    //fill(0, 255, 0);
+    //rect(200+sizeOfInputArea/2, 200+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2); //draw right green button
+    drawKeyboard();
   }
   
 }
@@ -91,6 +97,37 @@ boolean didMouseClick(float x, float y, float w, float h) //simple function to d
   return (mouseX > x && mouseX<x+w && mouseY>y && mouseY<y+h); //check to see if it is in button bounds
 }
 
+/* Draws the keyboard */
+void drawKeyboard()
+{
+  float keyWidth = sizeOfInputArea/4; //keys are square, so key width = key height
+  float keyHeight = keyWidth;
+  
+  //Note: the 1-by-1 input area starts at (200, 200)
+  for (int i = 0; i < alphabet.length; i++) {
+    int row = i/4; //which row the key is: 0, 1, 2, 3....
+    int col = i%4; //which column the key is: 0, 1, 2, 3
+    float textRefX = 200 + keyWidth/2;
+    float textRefY = 200 + keyHeight/2;
+    //float textRefY = 210;
+
+    //draw key
+    fill(255); //white button
+    stroke(180); //gray border for button
+    rect(200 + col*keyWidth, 200 + row*keyHeight, keyWidth, keyHeight);
+    
+    //draw key letter
+    textSize(40);
+    fill(0,0,0); //text color
+    textAlign(CENTER);
+    //text("" + alphabet[i], 200 + col*keyWidth + keyWidth/2, 200 + row*keyHeight + keyHeight/2); //draw key letter
+    text(alphabet[i], textRefX+col*keyWidth, textRefY+row*keyHeight);
+    
+    if (i >= 11)
+      break; //only drawing first 12 keys for now
+  }
+  
+}
 
 void mousePressed()
 {
@@ -111,12 +148,13 @@ void mousePressed()
 
   if (didMouseClick(200, 200, sizeOfInputArea, sizeOfInputArea/2)) //check if click occured in letter area
   {
-    if (currentLetter=='_') //if underscore, consider that a space bar
-      currentTyped+=" ";
-    else if (currentLetter=='`' & currentTyped.length()>0) //if `, treat that as a delete command
-      currentTyped = currentTyped.substring(0, currentTyped.length()-1);
-    else if (currentLetter!='`') //if not any of the above cases, add the current letter to the typed string
-      currentTyped+=currentLetter;
+    
+    //if (currentLetter=='_') //if underscore, consider that a space bar
+    //  currentTyped+=" ";
+    //else if (currentLetter=='`' & currentTyped.length()>0) //if `, treat that as a delete command
+    //  currentTyped = currentTyped.substring(0, currentTyped.length()-1);
+    //else if (currentLetter!='`') //if not any of the above cases, add the current letter to the typed string
+    //  currentTyped+=currentLetter;
   }
 
   //You are allowed to have a next button outside the 2" area
@@ -199,4 +237,3 @@ int computeLevenshteinDistance(String phrase1, String phrase2) //this computers 
 
   return distance[phrase1.length()][phrase2.length()];
 }
-
