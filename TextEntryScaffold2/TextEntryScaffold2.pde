@@ -20,7 +20,7 @@ final float sizeOfInputArea = DPIofYourDeviceScreen*1; //aka, 1.0 inches square!
 char currentLetter = 'a';
 
 //Group 16 variables
-String[] alphabet = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "H", 
+String[] alphabet = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", 
                     "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
                     "U", "V", "W", "X", "Y", "Z"};
 
