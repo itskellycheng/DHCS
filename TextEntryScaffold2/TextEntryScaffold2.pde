@@ -23,6 +23,8 @@ char currentLetter = 'a';
 String[] alphabet = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", 
                     "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
                     "U", "V", "W", "X", "Y", "Z"};
+float keyWidth = sizeOfInputArea/4; //keys are square, so key width = key height
+float keyHeight = keyWidth;
 
 //You can modify anything in here. This is just a basic implementation.
 void setup()
@@ -97,15 +99,15 @@ boolean didMouseClick(float x, float y, float w, float h) //simple function to d
   return (mouseX > x && mouseX<x+w && mouseY>y && mouseY<y+h); //check to see if it is in button bounds
 }
 
+
+
 /* Draws the keyboard */
 void drawKeyboard()
 {
-  float keyWidth = sizeOfInputArea/4; //keys are square, so key width = key height
-  float keyHeight = keyWidth;
-  
+
   //Note: the 1-by-1 input area starts at (200, 200)
   for (int i = 0; i < alphabet.length; i++) {
-    int row = i/4; //which row the key is: 0, 1, 2, 3....
+    int row = i/4; //which row the key is: 0, 1, 2....
     int col = i%4; //which column the key is: 0, 1, 2, 3
     float textRefX = 200 + keyWidth/2;
     float textRefY = 200 + keyHeight/2;
@@ -129,26 +131,43 @@ void drawKeyboard()
   
 }
 
+/* Helper function to find which key was pressed. Returns the letter. */
+String whichKey()
+{
+  for (int col = 0; col < 4; col++) {
+    for (int row = 0; row < 3; row++){
+      if(didMouseClick(200 + col*keyWidth, 200 + row*keyHeight, keyWidth, keyHeight)){
+        System.out.println("Key found");
+        return alphabet[row*4+col]; //todo - need to return in lowercase!!
+      }
+    }
+  }
+  System.out.println("No key found");
+  return "oops";
+}
+
 void mousePressed()
 {
 
-  if (didMouseClick(200, 200+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2)) //check if click in left button
-  {
-    currentLetter --;
-    if (currentLetter<'_') //wrap around to z
-      currentLetter = 'z';
-  }
+  //if (didMouseClick(200, 200+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2)) //check if click in left button
+  //{
+  //  currentLetter --;
+  //  if (currentLetter<'_') //wrap around to z
+  //    currentLetter = 'z';
+  //}
 
-  if (didMouseClick(200+sizeOfInputArea/2, 200+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2)) //check if click in right button
-  {
-    currentLetter ++;
-    if (currentLetter>'z') //wrap back to space (aka underscore)
-      currentLetter = '_';
-  }
+  //if (didMouseClick(200+sizeOfInputArea/2, 200+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2)) //check if click in right button
+  //{
+  //  currentLetter ++;
+  //  if (currentLetter>'z') //wrap back to space (aka underscore)
+  //    currentLetter = '_';
+  //}
 
-  if (didMouseClick(200, 200, sizeOfInputArea, sizeOfInputArea/2)) //check if click occured in letter area
+  if (didMouseClick(200, 200, sizeOfInputArea, sizeOfInputArea)) //check if click occured in letter area
   {
-    
+    System.out.println("Clicked on keyboard area!");
+    currentTyped+=whichKey();
+
     //if (currentLetter=='_') //if underscore, consider that a space bar
     //  currentTyped+=" ";
     //else if (currentLetter=='`' & currentTyped.length()>0) //if `, treat that as a delete command
