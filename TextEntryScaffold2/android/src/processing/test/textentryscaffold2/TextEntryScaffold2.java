@@ -1,5 +1,26 @@
-import java.util.Arrays;
-import java.util.Collections;
+package processing.test.textentryscaffold2;
+
+import processing.core.*; 
+import processing.data.*; 
+import processing.event.*; 
+import processing.opengl.*; 
+
+import java.util.Arrays; 
+import java.util.Collections; 
+
+import java.util.HashMap; 
+import java.util.ArrayList; 
+import java.io.File; 
+import java.io.BufferedReader; 
+import java.io.PrintWriter; 
+import java.io.InputStream; 
+import java.io.OutputStream; 
+import java.io.IOException; 
+
+public class TextEntryScaffold2 extends PApplet {
+
+
+
 
 String[] phrases; //contains all of the phrases
 int totalTrialNum = 4; //the total number of phrases to be tested - set this low for testing. Might be ~10 for the real bakeoff!
@@ -14,7 +35,7 @@ String currentPhrase = ""; //the current target phrase
 String currentTyped = ""; //what the user has typed so far
 //final int DPIofYourDeviceScreen = 441; //you will need to look up the DPI or PPI of your device to make sure you get the right scale!!
                                       //http://en.wikipedia.org/wiki/List_of_displays_by_pixel_density
-final int DPIofYourDeviceScreen = 320;       //Nexus 4 android  (resolution is 1280 x 768)      
+final int DPIofYourDeviceScreen = 168;       //Nexus 4 android  (resolution is 1280 x 768)      
 final float sizeOfInputArea = DPIofYourDeviceScreen*1; //aka, 1.0 inches square!
 
 //Variables for my silly implementation. You can delete this:
@@ -29,25 +50,25 @@ float keyWidth = sizeOfInputArea/4; //keys are square, so key width = key height
 float keyHeight = keyWidth;
 
 //You can modify anything in here. This is just a basic implementation.
-void setup()
+public void setup()
 {
   phrases = loadStrings("phrases2.txt"); //load the phrase set into memory
   Collections.shuffle(Arrays.asList(phrases)); //randomize the order of the phrases
     
   orientation(PORTRAIT); //can also be LANDSCAPE -- sets orientation on android device
-  size(1280, 768); //Nexus 4 android  (resolution is 1280 x 768)    
+   //Nexus 4 android  (resolution is 1280 x 768)    
   //size(1000, 1000); //Sets the size of the app. You may want to modify this to your device. Many phones today are 1080 wide by 1920 tall.
   textFont(createFont("Arial", 20)); //set the font to arial 24
   //noStroke(); //my code doesn't use any strokes.
 }
 
 //You can modify anything in here. This is just a basic implementation.
-void draw()
+public void draw()
 {
   background(0); //clear background
 
  // image(watch,-200,200);
-  fill(0);
+  fill(100);
   rect(200, 200, sizeOfInputArea, sizeOfInputArea); //input area should be 2" by 2"
 
   if (finishTime!=0)
@@ -99,7 +120,7 @@ void draw()
   
 }
 
-boolean didMouseClick(float x, float y, float w, float h) //simple function to do hit testing
+public boolean didMouseClick(float x, float y, float w, float h) //simple function to do hit testing
 {
   return (mouseX > x && mouseX<x+w && mouseY>y && mouseY<y+h); //check to see if it is in button bounds
 }
@@ -108,7 +129,7 @@ boolean didMouseClick(float x, float y, float w, float h) //simple function to d
 
 /* Draws the keyboard */
 
-void drawKeyboard()
+public void drawKeyboard()
 {
 
   //Note: the 1-by-1 input area starts at (200, 200)
@@ -138,7 +159,7 @@ void drawKeyboard()
 }
 
 /* Helper function to find which key was pressed. Returns the letter. */
-String whichKey()
+public String whichKey()
 {
   for (int col = 0; col < 4; col++) {
     for (int row = 0; row < 3; row++){
@@ -150,11 +171,11 @@ String whichKey()
   }
    
   
-  System.out.println("No key found");
+ // System.out.println("No key found");
   return "oops";
 }
 
-void mousePressed()
+public void mousePressed()
 {
 
   //if (didMouseClick(200, 200+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2)) //check if click in left button
@@ -192,7 +213,7 @@ void mousePressed()
 }
 
 
-void nextTrial()
+public void nextTrial()
 {
   if (currTrialNum >= totalTrialNum) //check to see if experiment is done
     return; //if so, just return
@@ -249,7 +270,7 @@ void nextTrial()
 
 
 //=========SHOULD NOT NEED TO TOUCH THIS METHOD AT ALL!==============
-int computeLevenshteinDistance(String phrase1, String phrase2) //this computers error between two strings
+public int computeLevenshteinDistance(String phrase1, String phrase2) //this computers error between two strings
 {
   int[][] distance = new int[phrase1.length() + 1][phrase2.length() + 1];
 
@@ -263,4 +284,14 @@ int computeLevenshteinDistance(String phrase1, String phrase2) //this computers 
       distance[i][j] = min(min(distance[i - 1][j] + 1, distance[i][j - 1] + 1), distance[i - 1][j - 1] + ((phrase1.charAt(i - 1) == phrase2.charAt(j - 1)) ? 0 : 1));
 
   return distance[phrase1.length()][phrase2.length()];
+}
+  public void settings() {  size(1280, 768); }
+  static public void main(String[] passedArgs) {
+    String[] appletArgs = new String[] { "TextEntryScaffold2" };
+    if (passedArgs != null) {
+      PApplet.main(concat(appletArgs, passedArgs));
+    } else {
+      PApplet.main(appletArgs);
+    }
+  }
 }
