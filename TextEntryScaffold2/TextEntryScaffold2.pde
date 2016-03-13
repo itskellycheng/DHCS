@@ -25,6 +25,7 @@ String[] alphabet = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
                     "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
                     "u", "v", "w", "x", "y", "z"};
 String[] specialKey = {"<", "_"};
+int [] isPressed = new int[28]; //[26]:space, [27]:delete
 float keyWidth = sizeOfInputArea/4; //keys are square, so key width = key height
 float keyHeight = keyWidth;
 
@@ -126,7 +127,13 @@ void drawKeyboard()
     //float textRefY = 210;
 
     //draw key
-    fill(255); //white button
+    if (isPressed[i] == 1){
+      fill(0,255,0);
+      isPressed[i] = 0;
+    }
+    else {
+      fill(255); //white button
+    }
     stroke(180); //gray border for button
     rect(200 + col*keyWidth, 200 + row*keyHeight, keyWidth, keyHeight);
     
@@ -142,7 +149,13 @@ void drawKeyboard()
   }
   
   //space key
-  fill(255); //white button
+  if (isPressed[26] == 1) {
+    fill(0,255,0);
+    isPressed[26] = 0;
+  }
+  else {
+    fill(255); //white button
+  }
   stroke(180); //gray border for button
   rect(200, 200 + 3*keyHeight, keyWidth*3, keyHeight);
   
@@ -152,7 +165,13 @@ void drawKeyboard()
   text("space", 200 + keyWidth*1.5, 200 + 3.6*keyHeight);
   
   //delete key
-  fill(180); //gray button
+  if (isPressed[27] == 1) {
+    fill(0,255,0);
+    isPressed[27] = 0;
+  }
+  else {
+    fill(180); //gray button
+  }
   stroke(180); //gray border for button
   rect(200 + 3*keyWidth, 200 + 3*keyHeight, keyWidth, keyHeight);
   
@@ -169,14 +188,22 @@ String whichKey()
     for (int row = 0; row < 3; row++){
       if(didMouseClick(200 + col*keyWidth, 200 + row*keyHeight, keyWidth, keyHeight)){
         System.out.println("Key found");
+        isPressed[row*4+col] = 1;
         return alphabet[row*4+col]; //todo - need to return in lowercase!!
       }
     }
   }
-   
   
   System.out.println("No key found");
   return "oops";
+}
+
+/* Helper function for delete */
+String removeLastChar(String str) {
+  //if (str.length()!=0)
+    return str.substring(0,str.length()-1);
+  //else
+    //return "";
 }
 
 void mousePressed()
@@ -196,7 +223,7 @@ void mousePressed()
   //    currentLetter = '_';
   //}
 
-  if (didMouseClick(200, 200, sizeOfInputArea, sizeOfInputArea)) //check if click occured in letter area
+  if (didMouseClick(200, 200, sizeOfInputArea, sizeOfInputArea-keyHeight)) //check if click occured in letter area
   {
     System.out.println("Clicked on keyboard area!");
     currentTyped+=whichKey();
@@ -207,6 +234,21 @@ void mousePressed()
     //  currentTyped = currentTyped.substring(0, currentTyped.length()-1);
     //else if (currentLetter!='`') //if not any of the above cases, add the current letter to the typed string
     //  currentTyped+=currentLetter;
+  }
+  
+  //Check if click occured in space key area 
+  if (didMouseClick(200, 200 + 3*keyHeight, keyWidth*3, keyHeight))
+  {
+    currentTyped+=" ";
+    isPressed[26] = 1;
+  }
+  
+  //Check if click occured in delete key area 
+  if (didMouseClick(200 + 3*keyWidth, 200 + 3*keyHeight, keyWidth, keyHeight))
+  {
+    if (currentTyped.length()!=0)
+      currentTyped=removeLastChar(currentTyped);
+      isPressed[27] = 1;
   }
 
   //You are allowed to have a next button outside the 2" area
