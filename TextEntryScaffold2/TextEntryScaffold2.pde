@@ -125,7 +125,7 @@ void drawKeyboard()
     rect(200 + col*keyWidth, 200 + row*keyHeight, keyWidth, keyHeight);
     
     //draw key letter
-    textSize(20);
+    textSize(30);
     fill(0,0,0); //text color
     textAlign(CENTER);
     //text("" + alphabet[i], 200 + col*keyWidth + keyWidth/2, 200 + row*keyHeight + keyHeight/2); //draw key letter
@@ -135,6 +135,25 @@ void drawKeyboard()
       break; //only drawing first 12 keys for now
   }
   
+  //space key
+  fill(255); //white button
+  stroke(180); //gray border for button
+  rect(200, 200 + 3*keyHeight, keyWidth*3, keyHeight);
+  
+  textSize(30);
+  fill(0,0,0); //text color
+  textAlign(CENTER);
+  text("space", 200 + keyWidth*1.5, 200 + 3.6*keyHeight);
+  
+  //delete key
+  fill(180); //gray button
+  stroke(180); //gray border for button
+  rect(200 + 3*keyWidth, 200 + 3*keyHeight, keyWidth, keyHeight);
+  
+  textSize(30);
+  fill(0,0,0); //text color
+  textAlign(CENTER);
+  text("del", 200 + keyWidth*3.5, 200 + 3.6*keyHeight);
 }
 
 /* Helper function to find which key was pressed. Returns the letter. */
