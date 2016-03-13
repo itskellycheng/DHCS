@@ -35,7 +35,12 @@ void setup()
   Collections.shuffle(Arrays.asList(phrases)); //randomize the order of the phrases
     
   orientation(PORTRAIT); //can also be LANDSCAPE -- sets orientation on android device
-  size(1280, 768); //Nexus 4 android  (resolution is 1280 x 768)    
+  size(1280, 768); //Nexus 4 android  (resolution is 1280 x 768) 
+  background(0xFF9900);
+  smooth();
+  noStroke();
+  fill(255);
+  rectMode(CENTER);
   //size(1000, 1000); //Sets the size of the app. You may want to modify this to your device. Many phones today are 1080 wide by 1920 tall.
   textFont(createFont("Arial", 20)); //set the font to arial 24
   //noStroke(); //my code doesn't use any strokes.
@@ -48,7 +53,8 @@ void draw()
 
  // image(watch,-200,200);
   fill(0);
-  rect(200, 200, sizeOfInputArea, sizeOfInputArea); //input area should be 2" by 2"
+  rect(width/2, height/2, 150,150);
+  //rect(200, 200, sizeOfInputArea, sizeOfInputArea); //input area should be 2" by 2"
 
   if (finishTime!=0)
   {
