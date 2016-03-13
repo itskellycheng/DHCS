@@ -167,10 +167,17 @@ String whichKey()
       }
     }
   }
-   
   
   System.out.println("No key found");
   return "oops";
+}
+
+/* Helper function for delete */
+String removeLastChar(String str) {
+  //if (str.length()!=0)
+    return str.substring(0,str.length()-1);
+  //else
+    //return "";
 }
 
 void mousePressed()
@@ -190,7 +197,7 @@ void mousePressed()
   //    currentLetter = '_';
   //}
 
-  if (didMouseClick(200, 200, sizeOfInputArea, sizeOfInputArea)) //check if click occured in letter area
+  if (didMouseClick(200, 200, sizeOfInputArea, sizeOfInputArea-keyHeight)) //check if click occured in letter area
   {
     System.out.println("Clicked on keyboard area!");
     currentTyped+=whichKey();
@@ -201,6 +208,19 @@ void mousePressed()
     //  currentTyped = currentTyped.substring(0, currentTyped.length()-1);
     //else if (currentLetter!='`') //if not any of the above cases, add the current letter to the typed string
     //  currentTyped+=currentLetter;
+  }
+  
+  //Check if click occured in space key area 
+  if (didMouseClick(200, 200 + 3*keyHeight, keyWidth*3, keyHeight))
+  {
+    currentTyped+=" ";
+  }
+  
+  //Check if click occured in delete key area 
+  if (didMouseClick(200 + 3*keyWidth, 200 + 3*keyHeight, keyWidth, keyHeight))
+  {
+    if (currentTyped.length()!=0)
+      currentTyped=removeLastChar(currentTyped);
   }
 
   //You are allowed to have a next button outside the 2" area
