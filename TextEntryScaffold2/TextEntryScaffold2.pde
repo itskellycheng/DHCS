@@ -1,9 +1,11 @@
+
 import java.util.Arrays;
 import java.util.Collections;
+/*
 import android.view.inputmethod.InputMethodManager;
 import android.content.Context;
 import android.view.MotionEvent;
-
+*/
 String[] phrases; //contains all of the phrases
 int totalTrialNum = 4; //the total number of phrases to be tested - set this low for testing. Might be ~10 for the real bakeoff!
 int currTrialNum = 0; // the current trial number (indexes into trials array above)
@@ -65,6 +67,7 @@ void setup()
 }
 // android touch event.
 
+/*
 public boolean surfaceTouchEvent(MotionEvent event) {
   // check what that was  triggered  
   switch(event.getAction()) {
@@ -78,7 +81,7 @@ public boolean surfaceTouchEvent(MotionEvent event) {
   return super.surfaceTouchEvent(event);
 }
 
-int swipeRight = 0;
+
 void swipeUp() {
 
 }
@@ -106,7 +109,7 @@ void swipeRight() {
   }
 }
 
-
+*/
 //You can modify anything in here. This is just a basic implementation.
 void draw()
 {
@@ -158,9 +161,9 @@ void draw()
     //rect(200, 200+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2); //draw left red button
     //fill(0, 255, 0);
     //rect(200+sizeOfInputArea/2, 200+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2); //draw right green button
-    if(swipeRight==0){
+  
       drawKeyboard();
-    }
+    
     
      
   }
