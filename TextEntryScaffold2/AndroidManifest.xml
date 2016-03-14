@@ -1,5 +1,1 @@
-<<<<<<< HEAD
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package=""><uses-sdk android:minSdkVersion="15" android:targetSdkVersion="19"/><application android:debuggable="true" android:icon="@drawable/icon" android:label=""><activity android:name=".MainActivity"><intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter></activity></application></manifest>
-=======
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package=""><uses-sdk android:minSdkVersion="15" android:targetSdkVersion="22"/><application android:debuggable="true" android:icon="@drawable/icon" android:label=""><activity android:name=".MainActivity"><intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter></activity></application></manifest>
->>>>>>> 860baae7d7de34a4ae68da0fca2e46957d270855
