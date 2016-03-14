@@ -24,10 +24,12 @@ final float sizeOfInputArea = DPIofYourDeviceScreen*1; //aka, 1.0 inches square!
 char currentLetter = 'a';
 
 //Group 16 variables
+/*
 String[] alphabet = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", 
   "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", 
   "u", "v", "w", "x", "y", "z"};
-String[] specialKey = {"<", "_"};
+*/
+String[] alphabet = {"q", "w", "e","r","a","s","d","f","z","x","c","v","t","y","u","i","g","h","j","k","b","n","m","o","p","l"};
 int [] isPressed = new int[28]; //[26]:space, [27]:delete
 float keyWidth = sizeOfInputArea/4; //keys are square, so key width = key height
 float keyHeight = keyWidth;
@@ -78,25 +80,24 @@ public boolean surfaceTouchEvent(MotionEvent event) {
 
 int swipeRight = 0;
 void swipeUp() {
-  println("a swipe up");
+
 }
 void swipeDown() {
-  println("a swipe down");
+
 }
 void swipeLeft() {
-  println("a swipe left");
+
   if(startIdx>0){
     if (currentTyped.length()!=0)
       currentTyped=removeLastChar(currentTyped);
     isPressed[27] = 1;
   startIdx -=11 ;
   }
-  if (currentTyped.length()!=0)
-      currentTyped=removeLastChar(currentTyped);
-    isPressed[27] = 1;
+ 
+  
 }
 void swipeRight() {
-  println("a swipe right");
+
   if (startIdx <23){
     if (currentTyped.length()!=0)
       currentTyped=removeLastChar(currentTyped);
@@ -144,9 +145,10 @@ void draw()
     text("Target:   " + currentPhrase, 70, 100); //draw the target string
     text("Entered:  " + currentTyped, 70, 140); //draw what the user has entered thus far 
     fill(255, 0, 0);
-    rect(800, 00, 200, 200); //drag next button
+    
+    rect(450, 400, 200, 200); //drag next button
     fill(255);
-    text("NEXT > ", 850, 100); //draw next label
+    text("NEXT > ", 450, 250); //draw next label
  
     
     //my draw code
@@ -297,7 +299,7 @@ void mousePressed()
   if (didMouseClick(startRectPosX, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight))
   {
     // currentTyped += " "; 
-    currentTyped+="^"; // debug 
+    currentTyped+=" "; // debug 
     isPressed[26] = 1;
   }
 
@@ -310,7 +312,7 @@ void mousePressed()
   }
 
   //You are allowed to have a next button outside the 2" area
-  if (didMouseClick(800, 00, 200, 200)) //check if click is in next button
+  if (didMouseClick(450, 400, 200, 200)) //check if click is in next button
   {
     nextTrial(); //if so, advance to next trial
   }
