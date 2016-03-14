@@ -1,11 +1,9 @@
-
 import java.util.Arrays;
 import java.util.Collections;
-/*
 import android.view.inputmethod.InputMethodManager;
 import android.content.Context;
 import android.view.MotionEvent;
-*/
+
 String[] phrases; //contains all of the phrases
 int totalTrialNum = 4; //the total number of phrases to be tested - set this low for testing. Might be ~10 for the real bakeoff!
 int currTrialNum = 0; // the current trial number (indexes into trials array above)
@@ -17,11 +15,10 @@ float lettersExpectedTotal = 0; //a running total of the number of letters expec
 float errorsTotal = 0; //a running total of the number of errors (when hitting next)
 String currentPhrase = ""; //the current target phrase
 String currentTyped = ""; //what the user has typed so far
-final int DPIofYourDeviceScreen = 200; //you will need to look up the DPI or PPI of your device to make sure you get the right scale!!
+//final int DPIofYourDeviceScreen = 441; //you will need to look up the DPI or PPI of your device to make sure you get the right scale!!
 //http://en.wikipedia.org/wiki/List_of_displays_by_pixel_density
-//final int DPIofYourDeviceScreen = 320;       //Nexus 4 android  (resolution is 1280 x 768)      
+final int DPIofYourDeviceScreen = 320;       //Nexus 4 android  (resolution is 1280 x 768)      
 final float sizeOfInputArea = DPIofYourDeviceScreen*1; //aka, 1.0 inches square!
-
 
 //Variables for my silly implementation. You can delete this:
 char currentLetter = 'a';
@@ -33,7 +30,6 @@ String[] alphabet = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
   "u", "v", "w", "x", "y", "z"};
 */
 String[] alphabet = {"q", "w", "e","r","a","s","d","f","z","x","c","v","t","y","u","i","g","h","j","k","b","n","m","o","p","l"};
-String[] vowel = {"e", "i", "o", "u"};
 int [] isPressed = new int[28]; //[26]:space, [27]:delete
 float keyWidth = sizeOfInputArea/4; //keys are square, so key width = key height
 float keyHeight = keyWidth;
@@ -69,7 +65,6 @@ void setup()
 }
 // android touch event.
 
-/*
 public boolean surfaceTouchEvent(MotionEvent event) {
   // check what that was  triggered  
   switch(event.getAction()) {
@@ -83,12 +78,21 @@ public boolean surfaceTouchEvent(MotionEvent event) {
   return super.surfaceTouchEvent(event);
 }
 
-
+int swipeRight = 0;
 void swipeUp() {
-
+if (currentTyped.length()!=0)
+      currentTyped=removeLastChar(currentTyped);
+    isPressed[27] = 1;
+ currentTyped+=" "; // debug 
+    isPressed[26] = 1;
 }
 void swipeDown() {
-
+if (currentTyped.length()!=0)
+      currentTyped=removeLastChar(currentTyped);
+    isPressed[27] = 1;
+ if (currentTyped.length()!=0)
+      currentTyped=removeLastChar(currentTyped);
+    isPressed[27] = 1;
 }
 void swipeLeft() {
 
@@ -98,9 +102,8 @@ void swipeLeft() {
     isPressed[27] = 1;
   startIdx -=11 ;
   }
- 
-  
 }
+
 void swipeRight() {
 
   if (startIdx <23){
@@ -111,7 +114,7 @@ void swipeRight() {
   }
 }
 
-*/
+
 //You can modify anything in here. This is just a basic implementation.
 void draw()
 {
@@ -163,9 +166,9 @@ void draw()
     //rect(200, 200+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2); //draw left red button
     //fill(0, 255, 0);
     //rect(200+sizeOfInputArea/2, 200+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2); //draw right green button
-  
+    if(swipeRight==0){
       drawKeyboard();
-    
+    }
     
      
   }
@@ -181,14 +184,14 @@ boolean didMouseClick(float x, float y, float w, float h) //simple function to d
 
 void drawKeyboard()
 {
-  float textRefX = startRectPosX + keyWidth/2;
-  float textRefY = startRectPosY + keyHeight/2;
   text(startIdx, 200,300);
   //Note: the 1-by-1 input area starts at (200, 200)
   //for (int i = 0; i < alphabet.length; i++) {
-  for (int i=startIdx; i<alphabet.length; i++) {
+  for (int i =startIdx; i<alphabet.length; i++) {
     int row = (i-startIdx)/4; //which row the key is: 0, 1, 2....
     int col = (i-startIdx)%4; //which column the key is: 0, 1, 2, 3
+    float textRefX = startRectPosX + keyWidth/2;
+    float textRefY = startRectPosY + keyHeight/2;
 
     //draw key
     if (isPressed[i] == 1) {
@@ -211,48 +214,36 @@ void drawKeyboard()
       break;
     }
   }
-  
-  //vowel keys
-  for (int i=0; i<4; i++) {
-    fill(255);
-    stroke(180); //gray border for button
-    rect(startRectPosX + i*keyWidth, startRectPosY + 3*keyHeight, keyWidth, keyHeight);
-    textSize(30);
-    fill(60, 200, 100); //text color
-    textAlign(CENTER);
-    text(vowel[i], textRefX + i*keyWidth, startRectPosY + 3.6*keyHeight);
-  }
-  
-  
-  //space key
-  //if (isPressed[26] == 1) {
-  //  fill(0, 255, 0);
-  //  isPressed[26] = 0;
-  //} else {
-  //  fill(255); //white button
-  //}
-  //stroke(180); //gray border for button
-  //rect(startRectPosX, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight);
 
-  //textSize(30);
-  //fill(0, 0, 0); //text color
-  //textAlign(CENTER);
-  //text("space", startRectPosX + keyWidth, startRectPosY + 3.6*keyHeight);
+  //space key
+  if (isPressed[26] == 1) {
+    fill(0, 255, 0);
+    isPressed[26] = 0;
+  } else {
+    fill(255); //white button
+  }
+  stroke(180); //gray border for button
+  rect(startRectPosX, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight);
+
+  textSize(30);
+  fill(0, 0, 0); //text color
+  textAlign(CENTER);
+  text("space", startRectPosX + keyWidth, startRectPosY + 3.6*keyHeight);
 
   //delete key
-  //if (isPressed[27] == 1) {
-  //  fill(0, 255, 0);
-  //  isPressed[27] = 0;
-  //} else {
-  //  fill(180); //gray button
-  //}
-  //stroke(180); //gray border for button
-  //rect(startRectPosX + 2*keyWidth, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight);
+  if (isPressed[27] == 1) {
+    fill(0, 255, 0);
+    isPressed[27] = 0;
+  } else {
+    fill(180); //gray button
+  }
+  stroke(180); //gray border for button
+  rect(startRectPosX + 2*keyWidth, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight);
 
-  //textSize(30);
-  //fill(0, 0, 0); //text color
-  //textAlign(CENTER);
-  //text("del", startRectPosX + keyWidth*3, startRectPosY + 3.6*keyHeight);
+  textSize(30);
+  fill(0, 0, 0); //text color
+  textAlign(CENTER);
+  text("del", startRectPosX + keyWidth*3, startRectPosY + 3.6*keyHeight);
 }
 
 /* Helper function to find which key was pressed. Returns the letter. */
@@ -261,7 +252,7 @@ String whichKey()
   for (int col = 0; col < 4; col++) {
     for (int row = 0; row < 3; row++) {
       if (didMouseClick(startRectPosX + col*keyWidth, startRectPosY + row*keyHeight, keyWidth, keyHeight)) {
-        System.out.println("Key found");
+       //System.out.println("Key found");
         isPressed[row*4+col] = 1;
         if((row*4+col)+startIdx<26){
           return alphabet[(row*4+col)+startIdx];
@@ -301,7 +292,7 @@ void mousePressed()
 
   if (didMouseClick(startRectPosX, startRectPosY, sizeOfInputArea, sizeOfInputArea-keyHeight)) //check if click occured in letter area
   {
-    System.out.println("Clicked on keyboard area!");
+    //System.out.println("Clicked on keyboard area!");
     currentTyped+=whichKey();
 
     //if (currentLetter=='_') //if underscore, consider that a space bar
@@ -312,39 +303,29 @@ void mousePressed()
     //  currentTyped+=currentLetter;
   }
 
-  //Check if click occured in vowel key area 
-  if (didMouseClick(startRectPosX, startRectPosY + 3*keyHeight, keyWidth*4, keyHeight))
+  //Check if click occured in space key area 
+  if (didMouseClick(startRectPosX, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight))
   {
-    for (int col = 0; col < 4; col++) {
-      if (didMouseClick(startRectPosX + col*keyWidth, startRectPosY + 3*keyHeight, keyWidth, keyHeight)) {
-        System.out.println("Vowel found");
-        //isPressed[row*4+col] = 1;
-        currentTyped+=vowel[col];
-      }
-    }
+    // currentTyped += " "; 
+    currentTyped+=" "; // debug 
+    isPressed[26] = 1;
   }
-  
-  ////Check if click occured in space key area 
-  //if (didMouseClick(startRectPosX, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight))
-  //{
-  //  // currentTyped += " "; 
-  //  currentTyped+=" "; // debug 
-  //  isPressed[26] = 1;
-  //}
 
-  ////Check if click occured in delete key area 
-  //if (didMouseClick(startRectPosX + 2*keyWidth, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight))
-  //{
-  //  if (currentTyped.length()!=0)
-  //    currentTyped=removeLastChar(currentTyped);
-  //  isPressed[27] = 1;
-  //}
-
+  //Check if click occured in delete key area 
+  /*
+  if (didMouseClick(startRectPosX + 2*keyWidth, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight))
+  {
+    if (currentTyped.length()!=0)
+      currentTyped=removeLastChar(currentTyped);
+    isPressed[27] = 1;
+  }
+  */
   //You are allowed to have a next button outside the 2" area
   if (didMouseClick(450, 400, 200, 200)) //check if click is in next button
   {
     nextTrial(); //if so, advance to next trial
   }
+  
 }
 
 
