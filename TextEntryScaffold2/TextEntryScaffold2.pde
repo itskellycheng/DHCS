@@ -31,6 +31,7 @@ String[] alphabet = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
 */
 String[] alphabet = {"q", "w", "e","r","a","s","d","f","z","x","c","v","t","y","u","i","g","h","j","k","b","n","m","o","p","l"};
 int [] isPressed = new int[28]; //[26]:space, [27]:delete
+String[] vowel = {"e", "i", "o", "u"};
 float keyWidth = sizeOfInputArea/4; //keys are square, so key width = key height
 float keyHeight = keyWidth;
 
@@ -185,14 +186,14 @@ boolean didMouseClick(float x, float y, float w, float h) //simple function to d
 void drawKeyboard()
 {
   text(startIdx, 200,300);
+  float textRefX = startRectPosX + keyWidth/2;
+  float textRefY = startRectPosY + keyHeight/2;
   //Note: the 1-by-1 input area starts at (200, 200)
   //for (int i = 0; i < alphabet.length; i++) {
   for (int i =startIdx; i<alphabet.length; i++) {
     int row = (i-startIdx)/4; //which row the key is: 0, 1, 2....
     int col = (i-startIdx)%4; //which column the key is: 0, 1, 2, 3
-    float textRefX = startRectPosX + keyWidth/2;
-    float textRefY = startRectPosY + keyHeight/2;
-
+    
     //draw key
     if (isPressed[i] == 1) {
       fill(0, 255, 0);
@@ -215,35 +216,45 @@ void drawKeyboard()
     }
   }
 
-  //space key
-  if (isPressed[26] == 1) {
-    fill(0, 255, 0);
-    isPressed[26] = 0;
-  } else {
-    fill(255); //white button
+  ////space key
+  //if (isPressed[26] == 1) {
+  //  fill(0, 255, 0);
+  //  isPressed[26] = 0;
+  //} else {
+  //  fill(255); //white button
+  //}
+  //stroke(180); //gray border for button
+  //rect(startRectPosX, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight);
+
+  //textSize(30);
+  //fill(0, 0, 0); //text color
+  //textAlign(CENTER);
+  //text("space", startRectPosX + keyWidth, startRectPosY + 3.6*keyHeight);
+
+  ////delete key
+  //if (isPressed[27] == 1) {
+  //  fill(0, 255, 0);
+  //  isPressed[27] = 0;
+  //} else {
+  //  fill(180); //gray button
+  //}
+  //stroke(180); //gray border for button
+  //rect(startRectPosX + 2*keyWidth, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight);
+
+  //textSize(30);
+  //fill(0, 0, 0); //text color
+  //textAlign(CENTER);
+  //text("del", startRectPosX + keyWidth*3, startRectPosY + 3.6*keyHeight);
+  //vowel keys
+  for (int i=0; i<4; i++) {
+    fill(255);
+    stroke(180); //gray border for button
+    rect(startRectPosX + i*keyWidth, startRectPosY + 3*keyHeight, keyWidth, keyHeight);
+    textSize(30);
+    fill(60, 200, 100); //text color
+    textAlign(CENTER);
+    text(vowel[i], textRefX + i*keyWidth, startRectPosY + 3.6*keyHeight);
   }
-  stroke(180); //gray border for button
-  rect(startRectPosX, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight);
-
-  textSize(30);
-  fill(0, 0, 0); //text color
-  textAlign(CENTER);
-  text("space", startRectPosX + keyWidth, startRectPosY + 3.6*keyHeight);
-
-  //delete key
-  if (isPressed[27] == 1) {
-    fill(0, 255, 0);
-    isPressed[27] = 0;
-  } else {
-    fill(180); //gray button
-  }
-  stroke(180); //gray border for button
-  rect(startRectPosX + 2*keyWidth, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight);
-
-  textSize(30);
-  fill(0, 0, 0); //text color
-  textAlign(CENTER);
-  text("del", startRectPosX + keyWidth*3, startRectPosY + 3.6*keyHeight);
 }
 
 /* Helper function to find which key was pressed. Returns the letter. */
@@ -302,14 +313,26 @@ void mousePressed()
     //else if (currentLetter!='`') //if not any of the above cases, add the current letter to the typed string
     //  currentTyped+=currentLetter;
   }
+  
+  //Check if click occured in vowel key area 
+  if (didMouseClick(startRectPosX, startRectPosY + 3*keyHeight, keyWidth*4, keyHeight))
+  {
+    for (int col = 0; col < 4; col++) {
+        if (didMouseClick(startRectPosX + col*keyWidth, startRectPosY + 3*keyHeight, keyWidth, keyHeight)) {
+          System.out.println("Vowel found");
+          //isPressed[row*4+col] = 1;
+          currentTyped+=vowel[col];
+        }
+     }
+  }
 
   //Check if click occured in space key area 
-  if (didMouseClick(startRectPosX, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight))
-  {
-    // currentTyped += " "; 
-    currentTyped+=" "; // debug 
-    isPressed[26] = 1;
-  }
+  //if (didMouseClick(startRectPosX, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight))
+  //{
+  //  // currentTyped += " "; 
+  //  currentTyped+=" "; // debug 
+  //  isPressed[26] = 1;
+  //}
 
   //Check if click occured in delete key area 
   /*
