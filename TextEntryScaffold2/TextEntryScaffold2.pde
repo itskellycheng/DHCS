@@ -38,7 +38,7 @@ int startRectPosX = 225;   // input rect start  X coordinate
 int startRectPosY = 600;   // input rect start  Y coordinate
 Gestures g;
 int startIdx = 0;
-
+String[] vowel = {"e", "i", "o", "u"};
 //You can modify anything in here. This is just a basic implementation.
 void setup()
 {
@@ -185,13 +185,15 @@ boolean didMouseClick(float x, float y, float w, float h) //simple function to d
 void drawKeyboard()
 {
   text(startIdx, 200,300);
+  float textRefX = startRectPosX + keyWidth/2;
+  float textRefY = startRectPosY + keyHeight/2;
   //Note: the 1-by-1 input area starts at (200, 200)
   //for (int i = 0; i < alphabet.length; i++) {
   for (int i =startIdx; i<alphabet.length; i++) {
     int row = (i-startIdx)/4; //which row the key is: 0, 1, 2....
     int col = (i-startIdx)%4; //which column the key is: 0, 1, 2, 3
-    float textRefX = startRectPosX + keyWidth/2;
-    float textRefY = startRectPosY + keyHeight/2;
+   // float textRefX = startRectPosX + keyWidth/2;
+    //float textRefY = startRectPosY + keyHeight/2;
 
     //draw key
     if (isPressed[i] == 1) {
@@ -215,7 +217,28 @@ void drawKeyboard()
     }
   }
 
+  //vowel keys
+  for (int i=0; i<4; i++) {
+    fill(255);
+    stroke(180); //gray border for button
+    rect(startRectPosX + i*keyWidth, startRectPosY + 3*keyHeight, keyWidth, keyHeight);
+    textSize(30);
+    fill(60, 200, 100); //text color
+    textAlign(CENTER);
+    text(vowel[i], textRefX + i*keyWidth, startRectPosY + 3.6*keyHeight);
+  }
+  
+  
+
   //space key
+  //if (isPressed[26] == 1) {
+  //  fill(0, 255, 0);
+  //  isPressed[26] = 0;
+  //} else {
+  //  fill(255); //white button
+  //}
+  //stroke(180); //gray border for button
+  //rect(startRectPosX, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight);
   if (isPressed[26] == 1) {
     fill(0, 255, 0);
     isPressed[26] = 0;
@@ -225,12 +248,24 @@ void drawKeyboard()
   stroke(180); //gray border for button
   rect(startRectPosX, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight);
 
+  //textSize(30);
+  //fill(0, 0, 0); //text color
+  //textAlign(CENTER);
+  //text("space", startRectPosX + keyWidth, startRectPosY + 3.6*keyHeight);
   textSize(30);
   fill(0, 0, 0); //text color
   textAlign(CENTER);
   text("space", startRectPosX + keyWidth, startRectPosY + 3.6*keyHeight);
 
   //delete key
+  //if (isPressed[27] == 1) {
+  //  fill(0, 255, 0);
+  //  isPressed[27] = 0;
+  //} else {
+  //  fill(180); //gray button
+  //}
+  //stroke(180); //gray border for button
+  //rect(startRectPosX + 2*keyWidth, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight);
   if (isPressed[27] == 1) {
     fill(0, 255, 0);
     isPressed[27] = 0;
@@ -240,10 +275,14 @@ void drawKeyboard()
   stroke(180); //gray border for button
   rect(startRectPosX + 2*keyWidth, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight);
 
+  //textSize(30);
+  //fill(0, 0, 0); //text color
+  //textAlign(CENTER);
+  //text("del", startRectPosX + keyWidth*3, startRectPosY + 3.6*keyHeight);
   textSize(30);
   fill(0, 0, 0); //text color
   textAlign(CENTER);
-  text("del", startRectPosX + keyWidth*3, startRectPosY + 3.6*keyHeight);
+  text("del", startRectPosX + keyWidth*3, startRectPosY + 3.6*keyHeight);  
 }
 
 /* Helper function to find which key was pressed. Returns the letter. */
