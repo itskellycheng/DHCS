@@ -56,7 +56,7 @@ void setup()
   fill(255);
   textFont(createFont("Arial", 20)); //set the font to arial 24
 
-  g=new Gestures(50, 70, this);    // iniate the gesture object first value is minimum swipe length in pixel and second is the diagonal offset allowed
+  g=new Gestures(50, 120, this);    // iniate the gesture object first value is minimum swipe length in pixel and second is the diagonal offset allowed
   g.setSwipeUp("swipeUp");    // attach the function called swipeUp to the gesture of swiping upwards
   g.setSwipeDown("swipeDown");    // attach the function called swipeDown to the gesture of swiping downwards
   g.setSwipeLeft("swipeLeft");  // attach the function called swipeLeft to the gesture of swiping left
@@ -97,18 +97,17 @@ boolean isSwipeLeft= false;
 boolean isSwipeRight = false;
 //next page
 void swipeLeft() {
-  if(isSwipeLeft==true){
+  if (isSwipeLeft==true) {
     if (currentTyped.length()!=0)
       currentTyped=removeLastChar(currentTyped);
     isPressed[27] = 1;
-     isSwipeLeft=false;
-     if(startIdx==0){
-      startIdx=13; 
-     }else{
-     startIdx=0;
-     }
-  }
-  else if (startIdx <=13 && isSwipeLeft == false) {
+    isSwipeLeft=false;
+    if (startIdx==0) {
+      startIdx=13;
+    } else {
+      startIdx=0;
+    }
+  } else if (startIdx <=13 && isSwipeLeft == false) {
     isSwipeLeft = true;
     if (currentTyped.length()!=0)
       currentTyped=removeLastChar(currentTyped);
@@ -118,31 +117,29 @@ void swipeLeft() {
 }
 // previou page
 void swipeRight() {
-  if(isSwipeRight == false){
+  if (isSwipeRight == false) {
     if (currentTyped.length()!=0)
       currentTyped=removeLastChar(currentTyped);
     isPressed[27] = 1;
-     isSwipeRight=true;
-     if(startIdx==13){
-        startIdx= 0; 
-     }else{
-     startIdx=13;
-     }
+    isSwipeRight=true;
+    if (startIdx==13) {
+      startIdx= 0;
+    } else {
+      startIdx=13;
+    }
+  } else if (startIdx>0 && isSwipeRight == true) {
+    isSwipeRight=false;
+    if (currentTyped.length()!=0)
+      currentTyped=removeLastChar(currentTyped);
+    isPressed[27] = 1;
+    startIdx -=13 ;
+  } else if (startIdx ==0 && isSwipeRight ==true) {
+    isSwipeRight=false;
+    if (currentTyped.length()!=0)
+      currentTyped=removeLastChar(currentTyped);
+    isPressed[27] = 1;
+    startIdx =13 ;
   }
-  else if (startIdx>0 && isSwipeRight == true) {
-   isSwipeRight=false;
-   if (currentTyped.length()!=0)
-     currentTyped=removeLastChar(currentTyped);
-   isPressed[27] = 1;
-   startIdx -=13 ;
- }
- else if (startIdx ==0 && isSwipeRight ==true){
-      isSwipeRight=false;
-   if (currentTyped.length()!=0)
-     currentTyped=removeLastChar(currentTyped);
-   isPressed[27] = 1;
-   startIdx =13 ;
- }
 }
 
 
@@ -159,6 +156,14 @@ void draw()
     fill(255);
     textAlign(CENTER);
     text("Finished", 280, 150);
+    text("==================", 280, 200);
+    text("Trials complete", 280, 240);
+    text("Total Time taken : " + str(finishTime - startTime), 280, 280);
+    text("Total letters entered : " + str(lettersEnteredTotal), 280, 320);
+    text("Total leeters expected : " + str(lettersExpectedTotal), 280, 360);
+    text("Total errors entered : " + str(errorsTotal), 280, 400);
+    text("WPM : " + str((lettersEnteredTotal/5.0f)/((finishTime - startTime)/60000f)), 280, 440);
+    text("==================", 280, 480);
     return;
   }
 
@@ -179,17 +184,18 @@ void draw()
     //you will need something like the next 10 lines in your code. Output does not have to be within the 2 inch area!
     textAlign(LEFT); //align the text left
     fill(128);
-    text("Phrase " + (currTrialNum+1) + " of " + totalTrialNum, 70, 50); //draw the trial count
+    text("Phrase " + (currTrialNum+1) + " of " + totalTrialNum, 70, 450); //draw the trial count
     fill(255);
-    text("Target:   " + currentPhrase, 70, 100); //draw the target string
-    text("Entered:  " + currentTyped, 70, 140); //draw what the user has entered thus far 
+    text("Target:   " + currentPhrase, 70, 500); //draw the target string
+    fill(173, 255, 47);
+    text("Entered:  " + currentTyped, 70, 540); //draw what the user has entered thus far 
     fill(255, 0, 0);
 
-    rect(450, 400, 200, 200); //drag next button
+    rect(600, 650, 150, 100); //drag next button
     fill(255);
-    text("NEXT > ", 450, 250); //draw next label
+    text("NEXT > ", 620, 700); //draw next label
 
-    drawKeyboard(); 
+    drawKeyboard();
   }
 }
 
@@ -202,21 +208,19 @@ void drawKeyboard()
 {
   String str;
   String str2;
-  if(isSwipeLeft==false){
-     str2 = "false"; 
+  if (isSwipeLeft==false) {
+    str2 = "false";
+  } else {
+    str2 = "true";
   }
-  else{
-   str2 = "true"; 
+  if (isSwipeRight==false) {
+    str = "false";
+  } else {
+    str = "true";
   }
-  if(isSwipeRight==false){
-     str = "false"; 
-  }
-  else{
-   str = "true"; 
-  }
-  text("SwipeRight " + str, 200, 500);
-  text("SwipeLeft " + str2, 200, 530);
-  text(startIdx, 200, 300);
+  text("SwipeRight = " + str, 200, 1000);
+  text("SwipeLeft = " + str2, 200, 1030);
+  text(startIdx, 200, 1060);
   float textRefX = startRectPosX + keyWidth/2;
   float textRefY = startRectPosY + keyHeight/2;
   for (int i =0; i<alphabetFirst.length; i++) {
@@ -229,7 +233,24 @@ void drawKeyboard()
       fill(0, 255, 0);
       isPressed[j] = 0;
     } else {
-      fill(255); //white button
+      if (startIdx==0) {
+        if ((col ==0 && row==0) ||(col==0&&row==1)||(col==0&&row==2)) {
+          fill(255, 165, 0);
+        }
+        else{
+        fill(255); //white button
+        }
+      } else if (startIdx==13) {
+        if ((col==1&&row==0) || (col==3 && row == 1)) {
+          fill(255, 165, 0);
+        }
+        else{
+        fill(255); //white button
+        }
+      }
+      //else {
+      //  fill(255); //white button
+      //}
     }
     stroke(180); //gray border for button
     rect(startRectPosX + col*keyWidth, startRectPosY + row*keyHeight, keyWidth, keyHeight);
@@ -239,48 +260,46 @@ void drawKeyboard()
     fill(0, 0, 0); //text color
     textAlign(CENTER);
     //text("" + alphabet[i], 200 + col*keyWidth + keyWidth/2, 200 + row*keyHeight + keyHeight/2); //draw key letter
-    if(startIdx ==0){
-       text(alphabetFirst[i], textRefX+col*keyWidth, textRefY+row*keyHeight);
-    }
-    else{
+    if (startIdx ==0) {
+      text(alphabetFirst[i], textRefX+col*keyWidth, textRefY+row*keyHeight);
+    } else {
       text(alphabetSecond[i], textRefX+col*keyWidth, textRefY+row*keyHeight);
     }
     if (i>16+startIdx) {
-     break;
+      break;
     }
   }
   //m
-  if(startIdx ==0){
-  if (isPressed[12] == 1) {
-    fill(0, 255, 0);
-    isPressed[12] = 0;
+  if (startIdx ==0) {
+    if (isPressed[12] == 1) {
+      fill(0, 255, 0);
+      isPressed[12] = 0;
+    } else {
+      fill(255); //white button
+    }
+
+    stroke(180); //gray border for button
+    rect(startRectPosX, startRectPosY + 3*keyHeight, keyWidth, keyHeight);
+
+    textSize(30);
+    fill(0, 0, 0); //text color
+    textAlign(CENTER);
+    text("m", startRectPosX + 0.5*keyWidth, startRectPosY + 3.5*keyHeight);
   } else {
-    fill(255); //white button
-  }
-
-  stroke(180); //gray border for button
-  rect(startRectPosX, startRectPosY + 3*keyHeight, keyWidth, keyHeight);
-
-  textSize(30);
-  fill(0, 0, 0); //text color
-  textAlign(CENTER);
-  text("m", startRectPosX + 0.5*keyWidth, startRectPosY + 3.5*keyHeight);
-  }
-  else{
     if (isPressed[24] == 1) {
-    fill(0, 255, 0);
-    isPressed[24] = 0;
-  } else {
-    fill(255); //white button
-  }
+      fill(0, 255, 0);
+      isPressed[24] = 0;
+    } else {
+      fill(255); //white button
+    }
 
-  stroke(180); //gray border for button
-  rect(startRectPosX, startRectPosY + 3*keyHeight, keyWidth, keyHeight);
+    stroke(180); //gray border for button
+    rect(startRectPosX, startRectPosY + 3*keyHeight, keyWidth, keyHeight);
 
-  textSize(30);
-  fill(0, 0, 0); //text color
-  textAlign(CENTER);
-  text("z", startRectPosX + 0.5*keyWidth, startRectPosY + 3.5*keyHeight);
+    textSize(30);
+    fill(0, 0, 0); //text color
+    textAlign(CENTER);
+    text("z", startRectPosX + 0.5*keyWidth, startRectPosY + 3.5*keyHeight);
   }
   //space key
   if (isPressed[26] == 1) {
@@ -327,13 +346,12 @@ String whichKey()
         } 
         if (col==3 && row == 3) {
           //Delete Function
-         return "$";
+          return "$";
         }
         isPressed[row*4+col] = 1;
         if ((row*4+col)+startIdx<13) {
           return alphabetFirst[(row*4+col)];
-        }
-        else{
+        } else {
           return alphabetSecond[(row*4+col)];
         }
       }
@@ -359,8 +377,7 @@ void mousePressed()
   {
     currentTyped+=whichKey();
   }
-
-  if (didMouseClick(450, 400, 200, 200)) //check if click is in next button
+  if (didMouseClick(600, 650, 150, 100)) //check if click is in next button
   {
     nextTrial(); //if so, advance to next trial
   }
