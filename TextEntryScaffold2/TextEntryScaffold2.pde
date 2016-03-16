@@ -77,7 +77,6 @@ public boolean surfaceTouchEvent(MotionEvent event) {
   return super.surfaceTouchEvent(event);
 }
 
-int swipeRight = 0;
 void swipeUp() {
   if (currentTyped.length()!=0)
     currentTyped=removeLastChar(currentTyped);
@@ -346,10 +345,6 @@ String whichKey()
         } 
         //Delete
         if (col==3 && row == 3) {
-<<<<<<< HEAD
-          //Delete Function
-          return "$";
-=======
           isPressed[27]=1;
           if (currentTyped.length()!=0) {
             return "$"; //signify to delete
@@ -357,7 +352,6 @@ String whichKey()
           else {
             return "";
           }
->>>>>>> 59fce57f73dc264ca52517adfcd480e2591dbe1c
         }
         isPressed[row*4+col] = 1;
         if ((row*4+col)+startIdx<13) {
