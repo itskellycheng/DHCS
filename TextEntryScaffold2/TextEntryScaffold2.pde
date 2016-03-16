@@ -338,15 +338,26 @@ String whichKey()
   for (int col = 0; col < 4; col++) {
     for (int row = 0; row < 4; row++) {
       if (didMouseClick(startRectPosX + col*keyWidth, startRectPosY + row*keyHeight, keyWidth, keyHeight)) {
-        if ( (col==1 ||col==2) && row == 3) {
+        if ( (col==1 || col==2) && row == 3) {
           isPressed[26]=1;
           if ((row*4+col)+startIdx<29) {
             return " ";
           }
         } 
+        //Delete
         if (col==3 && row == 3) {
+<<<<<<< HEAD
           //Delete Function
           return "$";
+=======
+          isPressed[27]=1;
+          if (currentTyped.length()!=0) {
+            return "$"; //signify to delete
+          }
+          else {
+            return "";
+          }
+>>>>>>> 59fce57f73dc264ca52517adfcd480e2591dbe1c
         }
         isPressed[row*4+col] = 1;
         if ((row*4+col)+startIdx<13) {
@@ -375,7 +386,15 @@ void mousePressed()
 {
   if (didMouseClick(startRectPosX, startRectPosY, sizeOfInputArea, sizeOfInputArea)) //check if click occured in letter area
   {
-    currentTyped+=whichKey();
+    String letter = whichKey();
+    //delete
+    if (letter.equals("$")) {
+      currentTyped = removeLastChar(currentTyped);
+    }
+    //normal letter or space
+    else {
+      currentTyped+=letter;
+    }
   }
   if (didMouseClick(600, 650, 150, 100)) //check if click is in next button
   {
