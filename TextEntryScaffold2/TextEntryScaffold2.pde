@@ -24,12 +24,13 @@ final float sizeOfInputArea = DPIofYourDeviceScreen*1; //aka, 1.0 inches square!
 char currentLetter = 'a';
 
 //Group 16 variables
-/*
-String[] alphabet = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", 
-  "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", 
+
+String[] alphabetFirst = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", 
+  "k", "l", "m"};
+String[] alphabetSecond = {"n", "o", "p", "q", "r", "s", "t", 
   "u", "v", "w", "x", "y", "z"};
-*/
-String[] alphabet = {"q", "w", "e","r","a","s","d","f","z","x","c","v","t","y","u","i","g","h","j","k","b","n","m","o","p","l"};
+
+//String[] alphabet = {"q", "w", "e","r","a","s","d","f","z","x","c","v","t","y","u","i","g","h","j","k","b","n","m","o","p","l"};
 int [] isPressed = new int[28]; //[26]:space, [27]:delete
 String[] vowel = {"e", "i", "o", "u"};
 float keyWidth = sizeOfInputArea/4; //keys are square, so key width = key height
@@ -39,11 +40,10 @@ int startRectPosX = 225;   // input rect start  X coordinate
 int startRectPosY = 600;   // input rect start  Y coordinate
 Gestures g;
 int startIdx = 0;
-String[] vowel = {"e", "i", "o", "u"};
+
 //You can modify anything in here. This is just a basic implementation.
 void setup()
 {
-
   phrases = loadStrings("phrases2.txt"); //load the phrase set into memory
   Collections.shuffle(Arrays.asList(phrases)); //randomize the order of the phrases
 
@@ -54,10 +54,8 @@ void setup()
   smooth();
   noStroke();
   fill(255);
-  //rectMode(CENTER);
-  //size(1000, 1000); //Sets the size of the app. You may want to modify this to your device. Many phones today are 1080 wide by 1920 tall.
   textFont(createFont("Arial", 20)); //set the font to arial 24
-  //noStroke(); //my code doesn't use any strokes.
+
   g=new Gestures(50, 70, this);    // iniate the gesture object first value is minimum swipe length in pixel and second is the diagonal offset allowed
   g.setSwipeUp("swipeUp");    // attach the function called swipeUp to the gesture of swiping upwards
   g.setSwipeDown("swipeDown");    // attach the function called swipeDown to the gesture of swiping downwards
@@ -81,38 +79,37 @@ public boolean surfaceTouchEvent(MotionEvent event) {
 
 int swipeRight = 0;
 void swipeUp() {
-if (currentTyped.length()!=0)
-      currentTyped=removeLastChar(currentTyped);
-    isPressed[27] = 1;
- currentTyped+=" "; // debug 
-    isPressed[26] = 1;
+  if (currentTyped.length()!=0)
+    currentTyped=removeLastChar(currentTyped);
+  isPressed[27] = 1;
+  currentTyped+=" "; // debug 
+  isPressed[26] = 1;
 }
 void swipeDown() {
-if (currentTyped.length()!=0)
-      currentTyped=removeLastChar(currentTyped);
-    isPressed[27] = 1;
- if (currentTyped.length()!=0)
-      currentTyped=removeLastChar(currentTyped);
-    isPressed[27] = 1;
+  if (currentTyped.length()!=0)
+    currentTyped=removeLastChar(currentTyped);
+  isPressed[27] = 1;
+  if (currentTyped.length()!=0)
+    currentTyped=removeLastChar(currentTyped);
+  isPressed[27] = 1;
 }
 void swipeLeft() {
-
-  if(startIdx>0){
+  if (startIdx <16) {
     if (currentTyped.length()!=0)
       currentTyped=removeLastChar(currentTyped);
     isPressed[27] = 1;
-  startIdx -=11 ;
+    startIdx +=16;
   }
 }
 
 void swipeRight() {
-
-  if (startIdx <23){
+  if (startIdx>0) {
     if (currentTyped.length()!=0)
       currentTyped=removeLastChar(currentTyped);
     isPressed[27] = 1;
-   startIdx +=11;
+    startIdx -=16 ;
   }
+  //
 }
 
 
@@ -154,24 +151,14 @@ void draw()
     text("Target:   " + currentPhrase, 70, 100); //draw the target string
     text("Entered:  " + currentTyped, 70, 140); //draw what the user has entered thus far 
     fill(255, 0, 0);
-    
+
     rect(450, 400, 200, 200); //drag next button
     fill(255);
     text("NEXT > ", 450, 250); //draw next label
- 
-    
-    //my draw code
-    //textAlign(CENTER);
-    //text("" + currentLetter, 200+sizeOfInputArea/2, 200+sizeOfInputArea/3); //draw current letter
-    //fill(255, 0, 0);
-    //rect(200, 200+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2); //draw left red button
-    //fill(0, 255, 0);
-    //rect(200+sizeOfInputArea/2, 200+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2); //draw right green button
-    if(swipeRight==0){
+
+    if (swipeRight==0) {
       drawKeyboard();
-    }
-    
-     
+    } 
   }
 }
 
@@ -180,26 +167,15 @@ boolean didMouseClick(float x, float y, float w, float h) //simple function to d
   return (mouseX > x && mouseX<x+w && mouseY>y && mouseY<y+h); //check to see if it is in button bounds
 }
 
-/* Draws the keyboard */
-
-
 void drawKeyboard()
 {
-  text(startIdx, 200,300);
+  text(startIdx, 200, 300);
   float textRefX = startRectPosX + keyWidth/2;
   float textRefY = startRectPosY + keyHeight/2;
-  //Note: the 1-by-1 input area starts at (200, 200)
-  //for (int i = 0; i < alphabet.length; i++) {
-  for (int i =startIdx; i<alphabet.length; i++) {
+  for (int i =startIdx; i<alphabetFirst.length; i++) {
     int row = (i-startIdx)/4; //which row the key is: 0, 1, 2....
     int col = (i-startIdx)%4; //which column the key is: 0, 1, 2, 3
-<<<<<<< HEAD
-   // float textRefX = startRectPosX + keyWidth/2;
-    //float textRefY = startRectPosY + keyHeight/2;
 
-=======
-    
->>>>>>> 698e93cac2f231b43c8564de6ef376f20418e840
     //draw key
     if (isPressed[i] == 1) {
       fill(0, 255, 0);
@@ -215,40 +191,28 @@ void drawKeyboard()
     fill(0, 0, 0); //text color
     textAlign(CENTER);
     //text("" + alphabet[i], 200 + col*keyWidth + keyWidth/2, 200 + row*keyHeight + keyHeight/2); //draw key letter
-    text(alphabet[i], textRefX+col*keyWidth, textRefY+row*keyHeight);
-
-    if (i>11+startIdx){
+    text(alphabetFirst[i], textRefX+col*keyWidth, textRefY+row*keyHeight);
+    if (i>16+startIdx) {
       break;
     }
   }
-
-<<<<<<< HEAD
-  //vowel keys
-  for (int i=0; i<4; i++) {
-    fill(255);
-    stroke(180); //gray border for button
-    rect(startRectPosX + i*keyWidth, startRectPosY + 3*keyHeight, keyWidth, keyHeight);
-    textSize(30);
-    fill(60, 200, 100); //text color
-    textAlign(CENTER);
-    text(vowel[i], textRefX + i*keyWidth, startRectPosY + 3.6*keyHeight);
+  //m
+  if (isPressed[12] == 1) {
+    fill(0, 255, 0);
+    isPressed[12] = 0;
+  } else {
+    fill(255); //white button
   }
-  
-  
+
+  stroke(180); //gray border for button
+  rect(startRectPosX, startRectPosY + 3*keyHeight, keyWidth, keyHeight);
+
+  textSize(30);
+  fill(0, 0, 0); //text color
+  textAlign(CENTER);
+  text("m", startRectPosX + 0.5*keyWidth, startRectPosY + 3.5*keyHeight);
 
   //space key
-=======
-  ////space key
->>>>>>> 698e93cac2f231b43c8564de6ef376f20418e840
-  //if (isPressed[26] == 1) {
-  //  fill(0, 255, 0);
-  //  isPressed[26] = 0;
-  //} else {
-  //  fill(255); //white button
-  //}
-  //stroke(180); //gray border for button
-  //rect(startRectPosX, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight);
-<<<<<<< HEAD
   if (isPressed[26] == 1) {
     fill(0, 255, 0);
     isPressed[26] = 0;
@@ -256,34 +220,14 @@ void drawKeyboard()
     fill(255); //white button
   }
   stroke(180); //gray border for button
-  rect(startRectPosX, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight);
-=======
->>>>>>> 698e93cac2f231b43c8564de6ef376f20418e840
+  rect(startRectPosX + keyWidth, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight);
 
-  //textSize(30);
-  //fill(0, 0, 0); //text color
-  //textAlign(CENTER);
-  //text("space", startRectPosX + keyWidth, startRectPosY + 3.6*keyHeight);
-<<<<<<< HEAD
   textSize(30);
   fill(0, 0, 0); //text color
   textAlign(CENTER);
-  text("space", startRectPosX + keyWidth, startRectPosY + 3.6*keyHeight);
+  text("space", startRectPosX + 2*keyWidth, startRectPosY + 3.6*keyHeight);
 
   //delete key
-=======
-
-  ////delete key
->>>>>>> 698e93cac2f231b43c8564de6ef376f20418e840
-  //if (isPressed[27] == 1) {
-  //  fill(0, 255, 0);
-  //  isPressed[27] = 0;
-  //} else {
-  //  fill(180); //gray button
-  //}
-  //stroke(180); //gray border for button
-  //rect(startRectPosX + 2*keyWidth, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight);
-<<<<<<< HEAD
   if (isPressed[27] == 1) {
     fill(0, 255, 0);
     isPressed[27] = 0;
@@ -291,46 +235,108 @@ void drawKeyboard()
     fill(180); //gray button
   }
   stroke(180); //gray border for button
-  rect(startRectPosX + 2*keyWidth, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight);
+  rect(startRectPosX + 3*keyWidth, startRectPosY + 3*keyHeight, keyWidth, keyHeight);
 
-  //textSize(30);
-  //fill(0, 0, 0); //text color
-  //textAlign(CENTER);
-  //text("del", startRectPosX + keyWidth*3, startRectPosY + 3.6*keyHeight);
   textSize(30);
   fill(0, 0, 0); //text color
   textAlign(CENTER);
-  text("del", startRectPosX + keyWidth*3, startRectPosY + 3.6*keyHeight);  
-=======
-
-  //textSize(30);
-  //fill(0, 0, 0); //text color
-  //textAlign(CENTER);
-  //text("del", startRectPosX + keyWidth*3, startRectPosY + 3.6*keyHeight);
-  //vowel keys
-  for (int i=0; i<4; i++) {
-    fill(255);
-    stroke(180); //gray border for button
-    rect(startRectPosX + i*keyWidth, startRectPosY + 3*keyHeight, keyWidth, keyHeight);
-    textSize(30);
-    fill(60, 200, 100); //text color
-    textAlign(CENTER);
-    text(vowel[i], textRefX + i*keyWidth, startRectPosY + 3.6*keyHeight);
-  }
->>>>>>> 698e93cac2f231b43c8564de6ef376f20418e840
+  text("del", startRectPosX + keyWidth*3.5, startRectPosY + 3.5*keyHeight);
 }
 
+void drawKeyboard2()
+{
+  text(startIdx, 200, 300);
+  float textRefX = startRectPosX + keyWidth/2;
+  float textRefY = startRectPosY + keyHeight/2;
+  for (int i =startIdx; i<alphabetSecond.length; i++) {
+    int row = (i-startIdx)/4; //which row the key is: 0, 1, 2....
+    int col = (i-startIdx)%4; //which column the key is: 0, 1, 2, 3
+
+    //draw key
+    if (isPressed[i] == 1) {
+      fill(0, 255, 0);
+      isPressed[i] = 0;
+    } else {
+      fill(255); //white button
+    }
+    stroke(180); //gray border for button
+    rect(startRectPosX + col*keyWidth, startRectPosY + row*keyHeight, keyWidth, keyHeight);
+
+    //draw key letter
+    textSize(30);
+    fill(0, 0, 0); //text color
+    textAlign(CENTER);
+    //text("" + alphabet[i], 200 + col*keyWidth + keyWidth/2, 200 + row*keyHeight + keyHeight/2); //draw key letter
+    text(alphabetSecond[i], textRefX+col*keyWidth, textRefY+row*keyHeight);
+    if (i>16+startIdx) {
+      break;
+    }
+  }
+  //m
+  if (isPressed[24] == 1) {
+    fill(0, 255, 0);
+    isPressed[24] = 0;
+  } else {
+    fill(255); //white button
+  }
+
+  stroke(180); //gray border for button
+  rect(startRectPosX, startRectPosY + 3*keyHeight, keyWidth, keyHeight);
+
+  textSize(30);
+  fill(0, 0, 0); //text color
+  textAlign(CENTER);
+  text("z", startRectPosX + 0.5*keyWidth, startRectPosY + 3.5*keyHeight);
+
+  //space key
+  if (isPressed[26] == 1) {
+    fill(0, 255, 0);
+    isPressed[26] = 0;
+  } else {
+    fill(255); //white button
+  }
+  stroke(180); //gray border for button
+  rect(startRectPosX + keyWidth, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight);
+
+  textSize(30);
+  fill(0, 0, 0); //text color
+  textAlign(CENTER);
+  text("space", startRectPosX + 2*keyWidth, startRectPosY + 3.6*keyHeight);
+
+  //delete key
+  if (isPressed[27] == 1) {
+    fill(0, 255, 0);
+    isPressed[27] = 0;
+  } else {
+    fill(180); //gray button
+  }
+  stroke(180); //gray border for button
+  rect(startRectPosX + 3*keyWidth, startRectPosY + 3*keyHeight, keyWidth, keyHeight);
+
+  textSize(30);
+  fill(0, 0, 0); //text color
+  textAlign(CENTER);
+  text("del", startRectPosX + keyWidth*3.5, startRectPosY + 3.5*keyHeight);
+}
 /* Helper function to find which key was pressed. Returns the letter. */
 String whichKey()
 {
   for (int col = 0; col < 4; col++) {
-    for (int row = 0; row < 3; row++) {
+    for (int row = 0; row < 4; row++) {
       if (didMouseClick(startRectPosX + col*keyWidth, startRectPosY + row*keyHeight, keyWidth, keyHeight)) {
-       //System.out.println("Key found");
+        if ( (col==1 ||col==2) && row == 3) {
+          isPressed[26]=1;
+          if ((row*4+col)+startIdx<26) {
+            return " ";
+          }
+        } 
+        if (col==3 && row == 3) {
+          //Delete function
+        }
         isPressed[row*4+col] = 1;
-        if((row*4+col)+startIdx<26){
-          return alphabet[(row*4+col)+startIdx];
-        }//todo - need to return in lowercase!!
+        if ((row*4+col)+startIdx<26) {
+          return alphabetFirst[(row*4+col)+startIdx];
+        }
       }
     }
   }
@@ -350,68 +356,15 @@ String removeLastChar(String str) {
 
 void mousePressed()
 {
-  //if (didMouseClick(200, 200+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2)) //check if click in left button
-  //{
-  //  currentLetter --;
-  //  if (currentLetter<'_') //wrap around to z
-  //    currentLetter = 'z';
-  //}
-
-  //if (didMouseClick(200+sizeOfInputArea/2, 200+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2)) //check if click in right button
-  //{
-  //  currentLetter ++;
-  //  if (currentLetter>'z') //wrap back to space (aka underscore)
-  //    currentLetter = '_';
-  //}
-
-  if (didMouseClick(startRectPosX, startRectPosY, sizeOfInputArea, sizeOfInputArea-keyHeight)) //check if click occured in letter area
+  if (didMouseClick(startRectPosX, startRectPosY, sizeOfInputArea, sizeOfInputArea)) //check if click occured in letter area
   {
-    //System.out.println("Clicked on keyboard area!");
     currentTyped+=whichKey();
-
-    //if (currentLetter=='_') //if underscore, consider that a space bar
-    //  currentTyped+=" ";
-    //else if (currentLetter=='`' & currentTyped.length()>0) //if `, treat that as a delete command
-    //  currentTyped = currentTyped.substring(0, currentTyped.length()-1);
-    //else if (currentLetter!='`') //if not any of the above cases, add the current letter to the typed string
-    //  currentTyped+=currentLetter;
-  }
-  
-  //Check if click occured in vowel key area 
-  if (didMouseClick(startRectPosX, startRectPosY + 3*keyHeight, keyWidth*4, keyHeight))
-  {
-    for (int col = 0; col < 4; col++) {
-        if (didMouseClick(startRectPosX + col*keyWidth, startRectPosY + 3*keyHeight, keyWidth, keyHeight)) {
-          System.out.println("Vowel found");
-          //isPressed[row*4+col] = 1;
-          currentTyped+=vowel[col];
-        }
-     }
   }
 
-  //Check if click occured in space key area 
-  //if (didMouseClick(startRectPosX, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight))
-  //{
-  //  // currentTyped += " "; 
-  //  currentTyped+=" "; // debug 
-  //  isPressed[26] = 1;
-  //}
-
-  //Check if click occured in delete key area 
-  /*
-  if (didMouseClick(startRectPosX + 2*keyWidth, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight))
-  {
-    if (currentTyped.length()!=0)
-      currentTyped=removeLastChar(currentTyped);
-    isPressed[27] = 1;
-  }
-  */
-  //You are allowed to have a next button outside the 2" area
   if (didMouseClick(450, 400, 200, 200)) //check if click is in next button
   {
     nextTrial(); //if so, advance to next trial
   }
-  
 }
 
 
