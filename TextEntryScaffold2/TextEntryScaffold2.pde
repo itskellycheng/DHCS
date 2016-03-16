@@ -98,19 +98,19 @@ void swipeLeft() {
     if (currentTyped.length()!=0)
       currentTyped=removeLastChar(currentTyped);
     isPressed[27] = 1;
-    startIdx +=16;
+    startIdx =13;
   }
 }
 
-void swipeRight() {
-  if (startIdx>0) {
-    if (currentTyped.length()!=0)
-      currentTyped=removeLastChar(currentTyped);
-    isPressed[27] = 1;
-    startIdx -=16 ;
-  }
-  //
-}
+//void swipeRight() {
+//  if (startIdx>0) {
+//    if (currentTyped.length()!=0)
+//      currentTyped=removeLastChar(currentTyped);
+//    isPressed[27] = 1;
+//    startIdx -=13 ;
+//  }
+//  //
+//}
 
 
 //You can modify anything in here. This is just a basic implementation.
@@ -172,14 +172,15 @@ void drawKeyboard()
   text(startIdx, 200, 300);
   float textRefX = startRectPosX + keyWidth/2;
   float textRefY = startRectPosY + keyHeight/2;
-  for (int i =startIdx; i<alphabetFirst.length; i++) {
-    int row = (i-startIdx)/4; //which row the key is: 0, 1, 2....
-    int col = (i-startIdx)%4; //which column the key is: 0, 1, 2, 3
+  for (int i =0; i<alphabetFirst.length; i++) {
+    int j = i+ startIdx;
+    int row = (j-startIdx)/4; //which row the key is: 0, 1, 2....
+    int col = (j-startIdx)%4; //which column the key is: 0, 1, 2, 3
 
     //draw key
-    if (isPressed[i] == 1) {
+    if (isPressed[j] == 1) {
       fill(0, 255, 0);
-      isPressed[i] = 0;
+      isPressed[j] = 0;
     } else {
       fill(255); //white button
     }
@@ -191,12 +192,18 @@ void drawKeyboard()
     fill(0, 0, 0); //text color
     textAlign(CENTER);
     //text("" + alphabet[i], 200 + col*keyWidth + keyWidth/2, 200 + row*keyHeight + keyHeight/2); //draw key letter
-    text(alphabetFirst[i], textRefX+col*keyWidth, textRefY+row*keyHeight);
+    if(startIdx ==0){
+       text(alphabetFirst[i], textRefX+col*keyWidth, textRefY+row*keyHeight);
+    }
+    else{
+      text(alphabetSecond[i], textRefX+col*keyWidth, textRefY+row*keyHeight);
+    }
     if (i>16+startIdx) {
-      break;
+     break;
     }
   }
   //m
+  if(startIdx ==0){
   if (isPressed[12] == 1) {
     fill(0, 255, 0);
     isPressed[12] = 0;
@@ -211,69 +218,9 @@ void drawKeyboard()
   fill(0, 0, 0); //text color
   textAlign(CENTER);
   text("m", startRectPosX + 0.5*keyWidth, startRectPosY + 3.5*keyHeight);
-
-  //space key
-  if (isPressed[26] == 1) {
-    fill(0, 255, 0);
-    isPressed[26] = 0;
-  } else {
-    fill(255); //white button
   }
-  stroke(180); //gray border for button
-  rect(startRectPosX + keyWidth, startRectPosY + 3*keyHeight, keyWidth*2, keyHeight);
-
-  textSize(30);
-  fill(0, 0, 0); //text color
-  textAlign(CENTER);
-  text("space", startRectPosX + 2*keyWidth, startRectPosY + 3.6*keyHeight);
-
-  //delete key
-  if (isPressed[27] == 1) {
-    fill(0, 255, 0);
-    isPressed[27] = 0;
-  } else {
-    fill(180); //gray button
-  }
-  stroke(180); //gray border for button
-  rect(startRectPosX + 3*keyWidth, startRectPosY + 3*keyHeight, keyWidth, keyHeight);
-
-  textSize(30);
-  fill(0, 0, 0); //text color
-  textAlign(CENTER);
-  text("del", startRectPosX + keyWidth*3.5, startRectPosY + 3.5*keyHeight);
-}
-
-void drawKeyboard2()
-{
-  text(startIdx, 200, 300);
-  float textRefX = startRectPosX + keyWidth/2;
-  float textRefY = startRectPosY + keyHeight/2;
-  for (int i =startIdx; i<alphabetSecond.length; i++) {
-    int row = (i-startIdx)/4; //which row the key is: 0, 1, 2....
-    int col = (i-startIdx)%4; //which column the key is: 0, 1, 2, 3
-
-    //draw key
-    if (isPressed[i] == 1) {
-      fill(0, 255, 0);
-      isPressed[i] = 0;
-    } else {
-      fill(255); //white button
-    }
-    stroke(180); //gray border for button
-    rect(startRectPosX + col*keyWidth, startRectPosY + row*keyHeight, keyWidth, keyHeight);
-
-    //draw key letter
-    textSize(30);
-    fill(0, 0, 0); //text color
-    textAlign(CENTER);
-    //text("" + alphabet[i], 200 + col*keyWidth + keyWidth/2, 200 + row*keyHeight + keyHeight/2); //draw key letter
-    text(alphabetSecond[i], textRefX+col*keyWidth, textRefY+row*keyHeight);
-    if (i>16+startIdx) {
-      break;
-    }
-  }
-  //m
-  if (isPressed[24] == 1) {
+  else{
+    if (isPressed[24] == 1) {
     fill(0, 255, 0);
     isPressed[24] = 0;
   } else {
@@ -287,7 +234,7 @@ void drawKeyboard2()
   fill(0, 0, 0); //text color
   textAlign(CENTER);
   text("z", startRectPosX + 0.5*keyWidth, startRectPosY + 3.5*keyHeight);
-
+  }
   //space key
   if (isPressed[26] == 1) {
     fill(0, 255, 0);
@@ -318,6 +265,7 @@ void drawKeyboard2()
   textAlign(CENTER);
   text("del", startRectPosX + keyWidth*3.5, startRectPosY + 3.5*keyHeight);
 }
+
 /* Helper function to find which key was pressed. Returns the letter. */
 String whichKey()
 {
@@ -326,16 +274,20 @@ String whichKey()
       if (didMouseClick(startRectPosX + col*keyWidth, startRectPosY + row*keyHeight, keyWidth, keyHeight)) {
         if ( (col==1 ||col==2) && row == 3) {
           isPressed[26]=1;
-          if ((row*4+col)+startIdx<26) {
+          if ((row*4+col)+startIdx<29) {
             return " ";
           }
         } 
         if (col==3 && row == 3) {
-          //Delete function
+          //Delete Function
+         return "$";
         }
         isPressed[row*4+col] = 1;
-        if ((row*4+col)+startIdx<26) {
-          return alphabetFirst[(row*4+col)+startIdx];
+        if ((row*4+col)+startIdx<13) {
+          return alphabetFirst[(row*4+col)];
+        }
+        else{
+          return alphabetSecond[(row*4+col)];
         }
       }
     }
