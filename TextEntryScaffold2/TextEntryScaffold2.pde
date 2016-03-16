@@ -93,24 +93,57 @@ void swipeDown() {
     currentTyped=removeLastChar(currentTyped);
   isPressed[27] = 1;
 }
+boolean isSwipeLeft= false;
+boolean isSwipeRight = false;
+//next page
 void swipeLeft() {
-  if (startIdx <16) {
+  if(isSwipeLeft==true){
+    if (currentTyped.length()!=0)
+      currentTyped=removeLastChar(currentTyped);
+    isPressed[27] = 1;
+     isSwipeLeft=false;
+     if(startIdx==0){
+      startIdx=13; 
+     }else{
+     startIdx=0;
+     }
+  }
+  else if (startIdx <=13 && isSwipeLeft == false) {
+    isSwipeLeft = true;
     if (currentTyped.length()!=0)
       currentTyped=removeLastChar(currentTyped);
     isPressed[27] = 1;
     startIdx =13;
   }
 }
-
-//void swipeRight() {
-//  if (startIdx>0) {
-//    if (currentTyped.length()!=0)
-//      currentTyped=removeLastChar(currentTyped);
-//    isPressed[27] = 1;
-//    startIdx -=13 ;
-//  }
-//  //
-//}
+// previou page
+void swipeRight() {
+  if(isSwipeRight == false){
+    if (currentTyped.length()!=0)
+      currentTyped=removeLastChar(currentTyped);
+    isPressed[27] = 1;
+     isSwipeRight=true;
+     if(startIdx==13){
+        startIdx= 0; 
+     }else{
+     startIdx=13;
+     }
+  }
+  else if (startIdx>0 && isSwipeRight == true) {
+   isSwipeRight=false;
+   if (currentTyped.length()!=0)
+     currentTyped=removeLastChar(currentTyped);
+   isPressed[27] = 1;
+   startIdx -=13 ;
+ }
+ else if (startIdx ==0 && isSwipeRight ==true){
+      isSwipeRight=false;
+   if (currentTyped.length()!=0)
+     currentTyped=removeLastChar(currentTyped);
+   isPressed[27] = 1;
+   startIdx =13 ;
+ }
+}
 
 
 //You can modify anything in here. This is just a basic implementation.
@@ -156,9 +189,7 @@ void draw()
     fill(255);
     text("NEXT > ", 450, 250); //draw next label
 
-    if (swipeRight==0) {
-      drawKeyboard();
-    } 
+    drawKeyboard(); 
   }
 }
 
@@ -169,6 +200,22 @@ boolean didMouseClick(float x, float y, float w, float h) //simple function to d
 
 void drawKeyboard()
 {
+  String str;
+  String str2;
+  if(isSwipeLeft==false){
+     str2 = "false"; 
+  }
+  else{
+   str2 = "true"; 
+  }
+  if(isSwipeRight==false){
+     str = "false"; 
+  }
+  else{
+   str = "true"; 
+  }
+  text("SwipeRight " + str, 200, 500);
+  text("SwipeLeft " + str2, 200, 530);
   text(startIdx, 200, 300);
   float textRefX = startRectPosX + keyWidth/2;
   float textRefY = startRectPosY + keyHeight/2;
